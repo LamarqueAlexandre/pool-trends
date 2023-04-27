@@ -12,7 +12,7 @@ framework:
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
-            'App\Message\SmsNotification': async
+            'App\Message\NewUserWelcomeEmail': async
 
 # when@test:
 #    framework:
