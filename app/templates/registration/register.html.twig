@@ -3,15 +3,20 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="container">
+        <img class="login-img" src="{{ asset('build/images/sign_in_background_laptop.jpg') }}" alt="Laptop signIn Background">
+        
+        <div class="form">
+            {{ form_start(form) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+            <h1>Create an account</h1>
+            
+            {{ form_row(form.email) }}
+            {{ form_row(form.plainPassword) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            <button type="submit" class="btn">Create an account</button>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
 {% endblock %}
