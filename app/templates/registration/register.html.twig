@@ -6,7 +6,8 @@
     <div class="container">
         <img class="login-img" src="{{ asset('build/images/sign_in_background_laptop.jpg') }}" alt="Laptop signIn Background">
         
-        <div class="form">
+        <div class="form-wrapper">
+            <a href="{{ path('app_login') }}">Sign in</a>
             {{ form_start(form) }}
 
             <h1>Create an account</h1>
