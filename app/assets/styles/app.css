@@ -7,64 +7,73 @@
     src: url('../fonts/Lato-Regular.ttf') format(truetype);
 }
 
+body, html {
+    height: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;
-    text-align: center;
 }
 
-.container {
+.wrapper {
     display: flex;
-    height: 955px;
+    height: 100%;
 }
 
-.login-img {
-    max-width: 55%;
-    height: 955px;
+.container-img {
+    width: 55%;
+    height: 100%;
+}
+
+.container-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     object-position: center;
 }
 
-h1 {
-    font-family: lato;
-    font-weight: lighter;
-}
-
-.form-wrapper {
+.container-form {
     width: 45%;
-    /* display: flex;
-    justify-content: center; */
 }
 
-.form-wrapper h1 {
-    margin-top: 260px;
-    font-family: lato;
-    font-weight: 1000;
-    color: #24034E;
-    font-size: 48px;
-}
-
-.form-wrapper a {
-    display: flex;
-    justify-content: end;
-    text-decoration: none;
-    border: 1px solid #24034E;
-    margin-left: 85%;
+.sign-in-btn {
     margin-top: 32px;
     margin-right: 32px;
-    padding-right: 20px;
+    margin-left: 85%;
+    text-align: center;
+    border: 1px solid #24034E;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 30px;
     background-color: #24034E;
-    color: #EFEAF5;
     font-family: lato;
     font-weight: 500;
     font-size: 20px
 }
 
-.form-wrapper form {
-    display: inline-block;
+.sign-in-btn a {
+    text-decoration: none;
+    color: #EFEAF5;
+}
+
+.sign-in-btn:hover a {
+    color: #24034E;
+    background-color: #EFEAF5;
+}
+
+.sign-in-btn:hover {
+    background-color: #EFEAF5;
+}
+
+.register-form {
+    text-align: center;
+    margin-top: 260px;
+    font-family: lato;
+    font-weight: 1000;
+    color: #24034E;
+    font-size: 24px;
 }
 
 input {
@@ -96,10 +105,17 @@ input:focus {
     padding: 15px 91px;
     border-radius: 45px;
     margin-top: 50px;
+    cursor: pointer;
 }
 
 .btn:hover {
     color: #24034E;
     background-color: #EFEAF5;
     border: 1px solid #24034E;
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+    .register-form {
+        margin-top: 130px;
+    }
 }

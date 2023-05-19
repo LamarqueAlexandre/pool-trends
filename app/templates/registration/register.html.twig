@@ -3,21 +3,28 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <img class="login-img" src="{{ asset('build/images/sign_in_background_laptop.jpg') }}" alt="Laptop signIn Background">
-        
-        <div class="form-wrapper">
-            <a href="{{ path('app_login') }}">Sign in</a>
-            {{ form_start(form) }}
+    <div class="wrapper">
+        <div class="container-img">
+            <img src="{{ asset('build/images/sign_in_background_laptop.jpg') }}" alt="Laptop signIn Background">
+        </div>
 
-            <h1>Create an account</h1>
-            
-            {{ form_row(form.email) }}
-            {{ form_row(form.plainPassword) }}
+        <div class="container-form">
+            <div class="sign-in-btn">
+                <a href="{{ path('app_login') }}">Sign in</a>
+            </div>
 
-            <button type="submit" class="btn">Create account</button>
+            <div class="register-form">
+                {{ form_start(form) }}
 
-            {{ form_end(form) }}
+                <h1>Create an account</h1>
+
+                {{ form_row(form.email) }}
+                {{ form_row(form.plainPassword) }}
+
+                <button type="submit" class="btn">Create account</button>
+
+                {{ form_end(form) }}
+            </div>
         </div>
     </div>
 {% endblock %}
