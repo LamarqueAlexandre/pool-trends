@@ -114,8 +114,29 @@ input:focus {
     border: 1px solid #24034E;
 }
 
-@media screen and (min-width: 1024px) and (max-width: 1439px) {
+@media screen and (max-width: 1439px) {
     .register-form {
         margin-top: 130px;
+        font-size: 16px;
+    }
+
+    input {
+        width: 264px;
+    }
+
+    .btn {
+        font-size: 24px;
+        padding: 15px 55px;
+    }
+
+    .sign-in-btn {
+        margin-left: 80%;
+        font-size: 16px;
+    }
+}
+
+@media screen and (min-width: 700px) and (max-width: 1023px) {
+    .sign-in-btn {
+        margin-left: 70%;
     }
 }
