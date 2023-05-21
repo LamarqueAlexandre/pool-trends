@@ -69,7 +69,7 @@ body {
 
 .register-form {
     text-align: center;
-    margin-top: 260px;
+    margin-top: 220px;
     font-family: lato;
     font-weight: 1000;
     color: #24034E;
@@ -96,22 +96,33 @@ input:focus {
     outline: none;
 }
 
-.btn {
+.btn, .btn-sign-in {
     background-color: #24034E;
     color: #EFEAF5;
     font-weight: 500;
     font-size: 32px;
     border: 0;
-    padding: 15px 91px;
     border-radius: 45px;
     margin-top: 50px;
     cursor: pointer;
 }
 
-.btn:hover {
+.btn {
+    padding: 15px 91px;
+}
+
+.btn-sign-in {
+    padding: 15px 150px;
+}
+
+.btn:hover, .btn-sign-in:hover {
     color: #24034E;
     background-color: #EFEAF5;
     border: 1px solid #24034E;
+}
+
+.sign-in-title {
+    margin-left: -30%;
 }
 
 @media screen and (max-width: 1439px) {
@@ -127,6 +138,11 @@ input:focus {
     .btn {
         font-size: 24px;
         padding: 15px 55px;
+    }
+
+    .btn-sign-in {
+        font-size: 24px;
+        padding: 15px 95px;
     }
 
     .sign-in-btn {
