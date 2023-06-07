@@ -36,15 +36,14 @@ class HomeController extends AbstractController
             ->getForm();
         
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $handHistoryFile = $form->get('hand_history')->getData();
-            $originalFilename = pathinfo($handHistoryFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $handHistoryFile->guessExtension();
+            $safeFilename = $slugger->slug('import-');
+            $newFilename = $safeFilename . '-' . $this->getUser()->getId()->toRfc4122() . '.' . $handHistoryFile->guessExtension();
 
             $handHistoryFile->move(
-                $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . uniqid(),
+                $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . $this->getUser()->getId()->toRfc4122(),
                 $newFilename
             );
 
