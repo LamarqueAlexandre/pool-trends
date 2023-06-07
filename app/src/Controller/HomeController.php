@@ -12,11 +12,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Service\HandHistoryTransformer;
 
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(Request $request, SluggerInterface $slugger): Response
+    public function index(Request $request, SluggerInterface $slugger, HandHistoryTransformer $handHistoryTransformer): Response
     {
         $form = $this->createFormBuilder()
             ->add('hand_history', FileType::class, [
@@ -41,6 +42,10 @@ class HomeController extends AbstractController
             $handHistoryFile = $form->get('hand_history')->getData();
             $safeFilename = $slugger->slug('import-');
             $newFilename = $safeFilename . '-' . $this->getUser()->getId()->toRfc4122() . '.' . $handHistoryFile->guessExtension();
+
+            $handHistoryTransformer->convertHandHistoryToArray(
+                $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . $this->getUser()->getId()->toRfc4122() . '/' . $newFilename
+            );
 
             $handHistoryFile->move(
                 $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . $this->getUser()->getId()->toRfc4122(),
