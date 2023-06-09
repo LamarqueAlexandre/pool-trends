@@ -22,10 +22,12 @@ class HandHistoryTransformer
                 $this->addDateHandHistory($line);
                 $this->getTheButton($line);
                 $this->getPlayersSeats($line);
+                $this->getSmallBlind($line);
+                $this->getBigBlind($line);
             }
 
             fclose($handle);
-            
+
             dump($this->allHands);
             exit;
 
@@ -74,7 +76,25 @@ class HandHistoryTransformer
 
     public function addButton(string $numberSeat)
     {
-        $this->allHands[$this->idHandHistory]["Players Position"] = ["Button" => "Seat " . $numberSeat];
+        $this->allHands[$this->idHandHistory]["Players Position"]["Button"] = "Seat " . $numberSeat;
+    }
+
+    public function getSmallBlind(string $line)
+    {
+        if (strpos($line, "small blind") !== false) {
+            $explodedLine = explode(' ', $line);
+            $seat = $this->getPlayerSeatByPseudo($explodedLine[0]);
+            $this->allHands[$this->idHandHistory]["Players Position"]["Small Blind"] = $seat;
+        }
+    }
+
+    public function getBigBlind(string $line)
+    {
+        if (strpos($line, "big blind") !== false) {
+            $explodedLine = explode(' ', $line);
+            $seat = $this->getPlayerSeatByPseudo($explodedLine[0]);
+            $this->allHands[$this->idHandHistory]["Players Position"]["Big Blind"] = $seat;
+        }
     }
 
     public function getPlayersSeats(string $line)
@@ -93,5 +113,10 @@ class HandHistoryTransformer
         if (!isset($this->allHands[$this->idHandHistory]["Seats"])) {
             $this->allHands[$this->idHandHistory]["Seats"][] = $this->playersSeats;
         }
+    }
+
+    public function getPlayerSeatByPseudo(string $pseudo)
+    {
+        return array_search($pseudo, $this->playersSeats);
     }
 }
