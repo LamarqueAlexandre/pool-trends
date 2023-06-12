@@ -85,19 +85,15 @@ class HandHistoryTransformer
 
     public function getSmallBlind(string $line)
     {
-        if (strpos($line, "small blind") !== false) {
-            $explodedLine = explode(' ', $line);
-            $seat = $this->getPlayerSeatByPseudo($explodedLine[0]);
-            $this->allHands[$this->idHandHistory]["Players Position"]["Small Blind"] = $seat;
+        if (preg_match('/^(.*?) posts small blind/', $line, $matches)) {
+            $this->allHands[$this->idHandHistory]["Players Position"]["Small Blind"] = $this->getPlayerSeatByPseudo($matches[1]);
         }
     }
 
     public function getBigBlind(string $line)
     {
-        if (strpos($line, "big blind") !== false) {
-            $explodedLine = explode(' ', $line);
-            $seat = $this->getPlayerSeatByPseudo($explodedLine[0]);
-            $this->allHands[$this->idHandHistory]["Players Position"]["Big Blind"] = $seat;
+        if (preg_match('/^(.*?) posts big blind/', $line, $matches)) {
+            $this->allHands[$this->idHandHistory]["Players Position"]["Big Blind"] = $this->getPlayerSeatByPseudo($matches[1]);
         }
     }
 
@@ -118,6 +114,6 @@ class HandHistoryTransformer
 
     public function getPlayerSeatByPseudo(string $pseudo)
     {
-        return array_search($pseudo, $this->playersSeats);
+        return array_search($pseudo, $this->playersSeats[$this->idHandHistory]);
     }
 }
