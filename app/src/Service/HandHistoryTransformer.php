@@ -28,7 +28,10 @@ class HandHistoryTransformer
 
             fclose($handle);
 
-            dump($this->playersSeats);
+            foreach ($this->allHands as $id => $hand) {
+                dump($id);
+                dump($hand);
+            }
             // dump($this->allHands);
             exit;
 
@@ -110,10 +113,7 @@ class HandHistoryTransformer
     public function addPlayerSeat(array $playerSeat)
     {
         $this->playersSeats[$this->idHandHistory][$playerSeat[0]] = $playerSeat[1];
-
-        // if (!isset($this->allHands[$this->idHandHistory]["Seats"])) {
-        //     $this->allHands[$this->idHandHistory]["Seats"][] = $this->playersSeats;
-        // }
+        $this->allHands[$this->idHandHistory]["Seats"] = $this->playersSeats[$this->idHandHistory];
     }
 
     public function getPlayerSeatByPseudo(string $pseudo)
