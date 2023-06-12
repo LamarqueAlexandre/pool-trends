@@ -28,7 +28,8 @@ class HandHistoryTransformer
 
             fclose($handle);
 
-            dump($this->allHands);
+            dump($this->playersSeats);
+            // dump($this->allHands);
             exit;
 
             return $this->allHands;
@@ -99,20 +100,20 @@ class HandHistoryTransformer
 
     public function getPlayersSeats(string $line)
     {
-        if (preg_match('/^Seat \d+: .+ \(\d+\.\d+€\)$/', $line)) {
+        if (preg_match('/^Seat \d+: .+ \(\d+(?:\.\d+)?€\)$/', $line)) {
             $playerPosition = explode(':', $line);
-            $playerPosition[1] = ltrim(preg_replace('/ \(\d+\.\d+€\)\n$/', '', $playerPosition[1]));
+            $playerPosition[1] = ltrim(preg_replace('/ \(\d+(?:\.\d+)?€\)\n$/', '', $playerPosition[1]));
             $this->addPlayerSeat($playerPosition);
         }
     }
 
     public function addPlayerSeat(array $playerSeat)
     {
-        $this->playersSeats[$playerSeat[0]] = $playerSeat[1];
+        $this->playersSeats[$this->idHandHistory][$playerSeat[0]] = $playerSeat[1];
 
-        if (!isset($this->allHands[$this->idHandHistory]["Seats"])) {
-            $this->allHands[$this->idHandHistory]["Seats"][] = $this->playersSeats;
-        }
+        // if (!isset($this->allHands[$this->idHandHistory]["Seats"])) {
+        //     $this->allHands[$this->idHandHistory]["Seats"][] = $this->playersSeats;
+        // }
     }
 
     public function getPlayerSeatByPseudo(string $pseudo)
