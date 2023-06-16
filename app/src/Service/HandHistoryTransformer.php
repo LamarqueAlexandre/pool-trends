@@ -5,6 +5,7 @@ namespace App\Service;
 class HandHistoryTransformer
 {
     private array $allHands = [];
+
     private string $idHandHistory;
 
     private array $playersSeats = [];
@@ -54,6 +55,7 @@ class HandHistoryTransformer
     {
         if (preg_match('/#(\d+-\d+-\d+)/', $line, $matches)) {
             $this->idHandHistory = $matches[1];
+            $this->bettingRound = '';
         }
     }
 
@@ -163,25 +165,24 @@ class HandHistoryTransformer
 
     private function getBettingRound(string $line)
     {
-        dump($line);
         if (preg_match('/\bPRE-FLOP\b/', $line)) {
             $this->bettingRound = "Preflop";
-            dump($this->bettingRound);
+            return;
         }
         
         if (preg_match('/\bFLOP\b/', $line)) {
             $this->bettingRound = "Flop";
-            dump($this->bettingRound);
+            return;
         }
 
         if (preg_match('/\bTURN\b/', $line)) {
             $this->bettingRound = "Turn";
-            dump($this->bettingRound);
+            return;
         }
         
         if (preg_match('/\bRIVER\b/', $line)) {
             $this->bettingRound = "River";
-            dump($this->bettingRound);
+            return;
         }
     }
 }
