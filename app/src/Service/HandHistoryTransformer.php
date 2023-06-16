@@ -136,6 +136,11 @@ class HandHistoryTransformer
                 );
             }
 
+            if (count($this->allHands[$this->idHandHistory]["Seats"]) === 4) {
+                $this->playersWithoutPosition["CO"] = $this->playersWithoutPosition["UTG"];
+                unset($this->playersWithoutPosition["UTG"]);
+            }
+
             $this->allHands[$this->idHandHistory]["Players Position"] = array_merge(
                 $this->allHands[$this->idHandHistory]["Players Position"], $this->playersWithoutPosition
             );
