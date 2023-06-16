@@ -13,6 +13,8 @@ class HandHistoryTransformer
 
     private array $playersWithoutPosition = [];
 
+    private string $bettingRound = '';
+
     public function convertHandHistoryToArray(string $fileToTransform)
     {
         $handle = fopen($fileToTransform, 'r');
@@ -29,14 +31,15 @@ class HandHistoryTransformer
                 $this->getSmallBlind($line);
                 $this->getBigBlind($line);
                 $this->getAllPlayersPositions();
+                $this->getBettingRound($line);
             }
 
             fclose($handle);
 
-            foreach ($this->allHands as $id => $hand) {
-                dump($id);
-                dump($hand);
-            }
+            // foreach ($this->allHands as $id => $hand) {
+            //     dump($id);
+            //     dump($hand);
+            // }
             // dump($this->allHands);
             exit;
 
@@ -156,5 +159,29 @@ class HandHistoryTransformer
     private function isHeadsUpSituation()
     {
         return $this->allHands[$this->idHandHistory]["Players Position"]["Button"] === $this->allHands[$this->idHandHistory]["Players Position"]["Small Blind"];
+    }
+
+    private function getBettingRound(string $line)
+    {
+        dump($line);
+        if (preg_match('/\bPRE-FLOP\b/', $line)) {
+            $this->bettingRound = "Preflop";
+            dump($this->bettingRound);
+        }
+        
+        if (preg_match('/\bFLOP\b/', $line)) {
+            $this->bettingRound = "Flop";
+            dump($this->bettingRound);
+        }
+
+        if (preg_match('/\bTURN\b/', $line)) {
+            $this->bettingRound = "Turn";
+            dump($this->bettingRound);
+        }
+        
+        if (preg_match('/\bRIVER\b/', $line)) {
+            $this->bettingRound = "River";
+            dump($this->bettingRound);
+        }
     }
 }
