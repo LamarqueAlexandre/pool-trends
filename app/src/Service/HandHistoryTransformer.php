@@ -47,35 +47,35 @@ class HandHistoryTransformer
         }
     }
 
-    public function getHandHistoryId(string $line)
+    private function getHandHistoryId(string $line)
     {
         if (preg_match('/#(\d+-\d+-\d+)/', $line, $matches)) {
             $this->idHandHistory = $matches[1];
         }
     }
 
-    public function addHandHistory()
+    private function addHandHistory()
     {
         if (!isset($this->allHands[$this->idHandHistory])) {
             $this->allHands[$this->idHandHistory] = [];
         }
     }
 
-    public function addNoLimitHoldem(string $line)
+    private function addNoLimitHoldem(string $line)
     {
         if (preg_match('/\((\d+\.\d+€\/\d+\.\d+€)\)/', $line, $matches)) {
             $this->allHands[$this->idHandHistory]["No-Limit Holdem"] = $matches[1];
         }
     }
 
-    public function addDateHandHistory(string $line)
+    private function addDateHandHistory(string $line)
     {
         if (preg_match('/(\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2})/', $line, $matches)) {
             $this->allHands[$this->idHandHistory]["Date"] = $matches[1];
         }
     }
 
-    public function getTheButton(string $line)
+    private function getTheButton(string $line)
     {
         if (preg_match('/^(.*?) is the button/', $line, $matches)) {
             $buttonPosition = substr($line, strpos($line, "#") + 1, 1);
@@ -83,21 +83,21 @@ class HandHistoryTransformer
         }
     }
 
-    public function getSmallBlind(string $line)
+    private function getSmallBlind(string $line)
     {
         if (preg_match('/^(.*?) posts small blind/', $line, $matches)) {
             $this->allHands[$this->idHandHistory]["Players Position"]["Small Blind"] = $this->getPlayerSeatByPseudo($matches[1]);
         }
     }
 
-    public function getBigBlind(string $line)
+    private function getBigBlind(string $line)
     {
         if (preg_match('/^(.*?) posts big blind/', $line, $matches)) {
             $this->allHands[$this->idHandHistory]["Players Position"]["Big Blind"] = $this->getPlayerSeatByPseudo($matches[1]);
         }
     }
 
-    public function getPlayersSeats(string $line)
+    private function getPlayersSeats(string $line)
     {
         if (preg_match('/^Seat \d+: .+ \(\d+(?:\.\d+)?€\)$/', $line)) {
             $playerPosition = explode(':', $line);
@@ -106,20 +106,20 @@ class HandHistoryTransformer
         }
     }
 
-    public function addPlayerSeat(array $playerSeat)
+    private function addPlayerSeat(array $playerSeat)
     {
         $this->playersSeats[$this->idHandHistory][$playerSeat[0]] = $playerSeat[1];
         $this->allHands[$this->idHandHistory]["Seats"] = $this->playersSeats[$this->idHandHistory];
     }
 
-    public function getPlayerSeatByPseudo(string $pseudo)
+    private function getPlayerSeatByPseudo(string $pseudo)
     {
         return array_search($pseudo, $this->playersSeats[$this->idHandHistory]);
     }
 
-    public function getAllPlayersPositions()
+    private function getAllPlayersPositions()
     {
-        if ($this->isArrayPlayersPositionIsCompleted() && !$this->isHeadsUpSituation()) {
+        if ($this->isArrayPlayersPositionCompleted() && !$this->isHeadsUpSituation()) {
             $this->playersWithoutPosition = array_values(array_diff(
                 array_keys($this->allHands[$this->idHandHistory]['Seats']), 
                 array_values($this->allHands[$this->idHandHistory]["Players Position"]))
@@ -147,13 +147,13 @@ class HandHistoryTransformer
         }
     }
 
-    public function isArrayPlayersPositionIsCompleted()
+    private function isArrayPlayersPositionCompleted()
     {
         return (   isset($this->allHands[$this->idHandHistory]["Players Position"])
                 && count($this->allHands[$this->idHandHistory]["Players Position"]) === 3);
     }
 
-    public function isHeadsUpSituation()
+    private function isHeadsUpSituation()
     {
         return $this->allHands[$this->idHandHistory]["Players Position"]["Button"] === $this->allHands[$this->idHandHistory]["Players Position"]["Small Blind"];
     }
