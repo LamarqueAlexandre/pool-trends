@@ -120,10 +120,11 @@ class HandHistoryTransformer
     public function getAllPlayersPositions()
     {
         if ($this->isArrayPlayersPositionIsCompleted() && !$this->isHeadsUpSituation()) {
-            $this->playersWithoutPosition = array_values(
-                array_diff(array_keys($this->allHands[$this->idHandHistory]['Seats']), 
-                            array_values($this->allHands[$this->idHandHistory]["Players Position"]))
-                        );
+            $this->playersWithoutPosition = array_values(array_diff(
+                array_keys($this->allHands[$this->idHandHistory]['Seats']), 
+                array_values($this->allHands[$this->idHandHistory]["Players Position"]))
+            );
+
             for ($i = 0; $i < count($this->playersWithoutPosition); $i++) {
                 $this->playersWithoutPosition[$this->missingSeats[$i]] = $this->playersWithoutPosition[$i];
                 unset($this->playersWithoutPosition[$i]);
