@@ -9,6 +9,10 @@ class HandHistoryTransformer
 
     private array $playersSeats = [];
 
+    private array $missingSeats = ['UTG', 'CO'];
+
+    private array $playersWithoutPosition = [];
+
     public function convertHandHistoryToArray(string $fileToTransform)
     {
         $handle = fopen($fileToTransform, 'r');
@@ -24,6 +28,7 @@ class HandHistoryTransformer
                 $this->getPlayersSeats($line);
                 $this->getSmallBlind($line);
                 $this->getBigBlind($line);
+                $this->getAllPlayersPositions();
             }
 
             fclose($handle);
@@ -72,15 +77,10 @@ class HandHistoryTransformer
 
     public function getTheButton(string $line)
     {
-        if (strpos($line, "is the button") !== false) {
+        if (preg_match('/^(.*?) is the button/', $line, $matches)) {
             $buttonPosition = substr($line, strpos($line, "#") + 1, 1);
-            $this->addButton($buttonPosition);
+            $this->allHands[$this->idHandHistory]["Players Position"]["Button"] = "Seat " . $buttonPosition;
         }
-    }
-
-    public function addButton(string $numberSeat)
-    {
-        $this->allHands[$this->idHandHistory]["Players Position"]["Button"] = "Seat " . $numberSeat;
     }
 
     public function getSmallBlind(string $line)
@@ -115,5 +115,40 @@ class HandHistoryTransformer
     public function getPlayerSeatByPseudo(string $pseudo)
     {
         return array_search($pseudo, $this->playersSeats[$this->idHandHistory]);
+    }
+
+    public function getAllPlayersPositions()
+    {
+        if ($this->isArrayPlayersPositionIsCompleted() && !$this->isHeadsUpSituation()) {
+            $this->playersWithoutPosition = array_values(
+                array_diff(array_keys($this->allHands[$this->idHandHistory]['Seats']), 
+                            array_values($this->allHands[$this->idHandHistory]["Players Position"]))
+                        );
+            for ($i = 0; $i < count($this->playersWithoutPosition); $i++) {
+                $this->playersWithoutPosition[$this->missingSeats[$i]] = $this->playersWithoutPosition[$i];
+                unset($this->playersWithoutPosition[$i]);
+            }
+            
+            if ($this->allHands[$this->idHandHistory]["Players Position"]["Big Blind"] === "Seat 4") {
+                $this->playersWithoutPosition = array_combine(
+                    array_keys($this->playersWithoutPosition), array_reverse(array_values($this->playersWithoutPosition))
+                );
+            }
+
+            $this->allHands[$this->idHandHistory]["Players Position"] = array_merge(
+                $this->allHands[$this->idHandHistory]["Players Position"], $this->playersWithoutPosition
+            );
+        }
+    }
+
+    public function isArrayPlayersPositionIsCompleted()
+    {
+        return (   isset($this->allHands[$this->idHandHistory]["Players Position"])
+                && count($this->allHands[$this->idHandHistory]["Players Position"]) === 3);
+    }
+
+    public function isHeadsUpSituation()
+    {
+        return $this->allHands[$this->idHandHistory]["Players Position"]["Button"] === $this->allHands[$this->idHandHistory]["Players Position"]["Small Blind"];
     }
 }
