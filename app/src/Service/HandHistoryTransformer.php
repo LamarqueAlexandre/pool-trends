@@ -33,6 +33,8 @@ class HandHistoryTransformer
                 $this->getBigBlind($line);
                 $this->getAllPlayersPositions();
                 $this->getBettingRound($line);
+                $this->addBettingRound();
+                $this->getPlayersAction($line);
             }
 
             fclose($handle);
@@ -183,6 +185,25 @@ class HandHistoryTransformer
         if (preg_match('/\bRIVER\b/', $line)) {
             $this->bettingRound = "River";
             return;
+        }
+    }
+
+    private function addBettingRound()
+    {
+        if (!empty($this->bettingRound)) {
+            $this->allHands[$this->idHandHistory][$this->bettingRound] = [];
+        }
+    }
+
+    private function getPlayersAction(string $line)
+    {
+        if (!empty($this->bettingRound)) {
+            foreach ($this->allHands[$this->idHandHistory]["Seats"] as $pseudo) {
+                if (strpos($line, $pseudo) != false) {
+                    dump($line);
+                    dump($pseudo);
+                }
+            }
         }
     }
 }
