@@ -16,6 +16,8 @@ class HandHistoryTransformer
 
     private string $bettingRound = '';
 
+    private array $actions = ['calls', 'raises', 'folds', 'checks'];
+
     public function convertHandHistoryToArray(string $fileToTransform)
     {
         $handle = fopen($fileToTransform, 'r');
@@ -39,10 +41,10 @@ class HandHistoryTransformer
 
             fclose($handle);
 
-            // foreach ($this->allHands as $id => $hand) {
-            //     dump($id);
-            //     dump($hand);
-            // }
+            foreach ($this->allHands as $id => $hand) {
+                dump($id);
+                dump($hand);
+            }
             // dump($this->allHands);
             exit;
 
@@ -198,10 +200,13 @@ class HandHistoryTransformer
     private function getPlayersAction(string $line)
     {
         if (!empty($this->bettingRound)) {
-            foreach ($this->allHands[$this->idHandHistory]["Seats"] as $pseudo) {
-                if (strpos($line, $pseudo) != false) {
-                    dump($line);
-                    dump($pseudo);
+            foreach ($this->actions as $action) {
+                $pattern = '/\b' . $action . '\b/';
+                if (preg_match($pattern, $line)) {
+                    $motif = '/\b(' . $action . ')\b/';
+                    $playerAction = preg_split($motif, $line, 2, PREG_SPLIT_DELIM_CAPTURE);
+                    dump($playerAction);
+                    exit;
                 }
             }
         }
