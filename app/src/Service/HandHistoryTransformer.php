@@ -45,8 +45,9 @@ class HandHistoryTransformer
                 dump($id);
                 dump($hand);
             }
-            // dump($this->allHands);
             exit;
+            // dump($this->allHands);
+            // exit;
 
             return $this->allHands;
         } else {
@@ -205,6 +206,14 @@ class HandHistoryTransformer
                 if (preg_match($pattern, $line)) {
                     $motif = '/\b(' . $action . ')\b/';
                     $playerAction = preg_split($motif, $line, 2, PREG_SPLIT_DELIM_CAPTURE);
+                    
+                    /**
+                     * Si on trouve une action, on ajoute le joueur et son action 
+                     * dans le "round" correspondant
+                     */
+                    $this->allHands[$this->idHandHistory][$this->bettingRound][trim($playerAction[0])] = $playerAction[1];
+                    dump($this->allHands[$this->idHandHistory]);
+                    exit;
                     dump($playerAction);
                     exit;
                 }

@@ -43,17 +43,17 @@ class HomeController extends AbstractController
             $safeFilename = $slugger->slug('import-');
             $newFilename = $safeFilename . '-' . $this->getUser()->getId()->toRfc4122() . '.' . $handHistoryFile->guessExtension();
 
+            $handHistoryFile->move(
+                $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . $this->getUser()->getId()->toRfc4122(),
+                $newFilename
+            );
+
             $formattedHandHistories = $handHistoryTransformer->convertHandHistoryToArray(
                 $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . $this->getUser()->getId()->toRfc4122() . '/' . $newFilename
             );
 
             dump($formattedHandHistories);
             exit;
-
-            $handHistoryFile->move(
-                $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . $this->getUser()->getId()->toRfc4122(),
-                $newFilename
-            );
 
             return $this->redirectToRoute('app_home');
         }
