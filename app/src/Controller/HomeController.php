@@ -42,7 +42,7 @@ class HomeController extends AbstractController
             $handHistoryFile = $form->get('hand_history')->getData();
             $safeFilename = $slugger->slug('import-');
             $newFilename = $safeFilename . '-' . $this->getUser()->getId()->toRfc4122() . '.' . $handHistoryFile->guessExtension();
-
+            
             $handHistoryFile->move(
                 $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . $this->getUser()->getId()->toRfc4122(),
                 $newFilename
