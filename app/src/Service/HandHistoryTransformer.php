@@ -16,7 +16,7 @@ class HandHistoryTransformer
 
     private string $bettingRound = '';
 
-    private array $actions = ['calls', 'raises', 'folds', 'checks'];
+    private array $actions = ['calls', 'bets', 'raises', 'folds', 'checks'];
 
     public function convertHandHistoryToArray(string $fileToTransform)
     {
@@ -35,8 +35,7 @@ class HandHistoryTransformer
                 $this->getBigBlind($line);
                 $this->getAllPlayersPositions();
                 $this->getBettingRound($line);
-                $this->addBettingRound();
-                // $this->getPlayersAction($line);
+                $this->getPlayersAction($line);
             }
 
             fclose($handle);
@@ -44,7 +43,6 @@ class HandHistoryTransformer
             foreach ($this->allHands as $id => $hand) {
                 dump($id);
                 dump($hand);
-                exit;
             }
             exit;
             // dump($this->allHands);
@@ -202,13 +200,6 @@ class HandHistoryTransformer
         }
     }
 
-    private function addBettingRound()
-    {
-        if (!empty($this->bettingRound)) {
-            $this->allHands[$this->idHandHistory][$this->bettingRound] = [];
-        }
-    }
-
     private function getPlayersAction(string $line)
     {
         if (!empty($this->bettingRound)) {
@@ -222,11 +213,7 @@ class HandHistoryTransformer
                      * Si on trouve une action, on ajoute le joueur et son action 
                      * dans le "round" correspondant
                      */
-                    $this->allHands[$this->idHandHistory][$this->bettingRound][trim($playerAction[0])] = $playerAction[1];
-                    dump($this->allHands[$this->idHandHistory]);
-                    exit;
-                    dump($playerAction);
-                    exit;
+                    $this->allHands[$this->idHandHistory][$this->bettingRound][] = [trim($playerAction[0]) => $playerAction[1]];
                 }
             }
         }
