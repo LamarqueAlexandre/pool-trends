@@ -16,6 +16,8 @@ class HandHistoryTransformer
 
     private string $bettingRound = '';
 
+    private string $showdown = '';
+
     private array $actions = ['calls', 'bets', 'raises', 'folds', 'checks'];
 
     public function convertHandHistoryToArray(string $fileToTransform)
@@ -23,7 +25,9 @@ class HandHistoryTransformer
         $handle = fopen($fileToTransform, 'r');
 
         if ($handle) {
-            while (($line = fgets($handle)) !== false) {
+
+            $count = 0;
+            while ((($line = fgets($handle)) !== false) && $count < 10000) {
                 // Récupération de l'identifiant de la HandHistory
                 $this->getHandHistoryId($line);
                 $this->addHandHistory();
@@ -36,8 +40,11 @@ class HandHistoryTransformer
                 $this->getAllPlayersPositions();
                 $this->getBettingRound($line);
                 $this->getPlayersAction($line);
+                $this->setShowdown($line);
+                $this->getShowdown($line);
+                $count++;
             }
-
+            
             fclose($handle);
 
             foreach ($this->allHands as $id => $hand) {
@@ -60,6 +67,7 @@ class HandHistoryTransformer
         if (preg_match('/#(\d+-\d+-\d+)/', $line, $matches)) {
             $this->idHandHistory = $matches[1];
             $this->bettingRound = '';
+            $this->showdown = '';
         }
     }
 
@@ -197,6 +205,23 @@ class HandHistoryTransformer
         if (preg_match('/\bRIVER\b/', $line)) {
             $this->bettingRound = "River";
             return;
+        }
+    }
+
+    private function setShowdown(string $line)
+    {
+        if (preg_match('/\bSHOW DOWN\b/', $line)) {
+            $this->showdown = "Show Down";
+            return;
+        }
+    }
+
+    private function getShowdown(string $line)
+    {
+        if (!empty($this->showdown)) {
+            if (preg_match('/^(.*?)\s+shows\s+\[(.*?)\]\s+\(.*\)$/', $line, $matches)) {
+                $this->allHands[$this->idHandHistory][$this->showdown][$matches[1]] = $matches[2];
+            }
         }
     }
 
