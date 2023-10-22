@@ -26,8 +26,7 @@ class HandHistoryTransformer
 
         if ($handle) {
 
-            $count = 0;
-            while ((($line = fgets($handle)) !== false) && $count < 10000) {
+            while (($line = fgets($handle)) !== false) {
                 // Récupération de l'identifiant de la HandHistory
                 $this->getHandHistoryId($line);
                 $this->addHandHistory();
@@ -42,18 +41,9 @@ class HandHistoryTransformer
                 $this->getPlayersAction($line);
                 $this->setShowdown($line);
                 $this->getShowdown($line);
-                $count++;
             }
             
             fclose($handle);
-
-            foreach ($this->allHands as $id => $hand) {
-                dump($id);
-                dump($hand);
-            }
-            exit;
-            // dump($this->allHands);
-            // exit;
 
             return $this->allHands;
         } else {

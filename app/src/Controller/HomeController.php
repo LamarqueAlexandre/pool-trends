@@ -52,7 +52,20 @@ class HomeController extends AbstractController
                 $this->getParameter('hands_history_directory') . '/' . sys_get_temp_dir() . '-' . $this->getUser()->getId()->toRfc4122() . '/' . $newFilename
             );
 
-            dump($formattedHandHistories);
+            /**
+             * Filtrer le tableau et ne récupérer que les hands où il y a eu un showdown
+             */
+            $handsHistories = array_filter($formattedHandHistories, function ($item) {
+                return isset($item["Show Down"]);
+            });
+
+            foreach ($handsHistories as $hand) {
+                dump($hand);
+                exit;
+            }
+
+            dump($handsHistories);
+            // dump($formattedHandHistories);
             exit;
 
             return $this->redirectToRoute('app_home');
