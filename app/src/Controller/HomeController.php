@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\HandHistoryOrganizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,8 +18,12 @@ use App\Service\HandHistoryTransformer;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(Request $request, SluggerInterface $slugger, HandHistoryTransformer $handHistoryTransformer): Response
-    {
+    public function index(
+        Request $request,
+        SluggerInterface $slugger,
+        HandHistoryTransformer $handHistoryTransformer,
+        HandHistoryOrganizer $handHistoryOrganizer
+    ): Response {
         $form = $this->createFormBuilder()
             ->add('hand_history', FileType::class, [
                 'label' => 'Hand History',
@@ -59,13 +64,10 @@ class HomeController extends AbstractController
                 return isset($item["Show Down"]);
             });
 
-            foreach ($handsHistories as $hand) {
-                dump($hand);
-                exit;
-            }
-
-            dump($handsHistories);
-            // dump($formattedHandHistories);
+            /**
+             * Classer les mains par "type" d'action preflop
+             */
+            $organizedHands = $handHistoryOrganizer->organizeHAnds($handsHistories);
             exit;
 
             return $this->redirectToRoute('app_home');
