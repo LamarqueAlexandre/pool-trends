@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Service\HandHistoryTransformer;
+use App\Service\SingleRaiseHandsAnalyzer;
 
 class HomeController extends AbstractController
 {
@@ -22,7 +23,8 @@ class HomeController extends AbstractController
         Request $request,
         SluggerInterface $slugger,
         HandHistoryTransformer $handHistoryTransformer,
-        HandHistoryOrganizer $handHistoryOrganizer
+        HandHistoryOrganizer $handHistoryOrganizer,
+        SingleRaiseHandsAnalyzer $singleRaiseHandsAnalyzer
     ): Response {
         $form = $this->createFormBuilder()
             ->add('hand_history', FileType::class, [
@@ -68,7 +70,15 @@ class HomeController extends AbstractController
              * Classer les mains par "type" d'action preflop
              */
             $organizedHands = $handHistoryOrganizer->organizeHAnds($handsHistories);
-            exit;
+
+            foreach ($organizedHands as $typeOfHands => $arrayOfHands) {
+                /**
+                 * Analyse des mains SingleRaiseHands
+                 */
+                if ($typeOfHands === "SingleRaiseHands") {
+                    $singleRaiseHandsAnalyzer->analyze($arrayOfHands);
+                }
+            }
 
             return $this->redirectToRoute('app_home');
         }
