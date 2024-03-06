@@ -8,19 +8,27 @@ class SingleRaiseHandsAnalyzer
 
     public function analyze(array $hands)
     {
-        foreach ($hands as $hand) {
-            $this->defineSituation($hand['Show Down'], $hand['Players Position']);
+        foreach ($hands as $id => $hand) {
+            try {
+                $this->getDataFromSpot($hand['Show Down'], $hand['Players Position']);
+
+                /**
+                 * 
+                 */
+
+            } catch (\Exception $e) {
+                dump($id);
+            }
+
+            dump($this->spotsConfigurations);
+            exit;
         }
-        dump("ici");
-        dump($hands);
-        exit;
     }
 
-    private function defineSituation(array $showdown, array $playersPositions)
+    private function getDataFromSpot(array $showdown, array $playersPositions)
     {
         $matchingRows = [];
         $positions = [];
-        $spot = '';
 
         foreach ($playersPositions as $position => $pseudo) {
             if (array_key_exists($pseudo, $showdown)) {
@@ -28,7 +36,7 @@ class SingleRaiseHandsAnalyzer
             }
         }
 
-        $positions = array_keys($matchingRows);
+        $positions = array_reverse(array_keys($matchingRows));
 
         /**
          * Trouver un moyen de définir qui chaine de caractère qui précise le spot
@@ -36,10 +44,31 @@ class SingleRaiseHandsAnalyzer
          * Exemple : "Button vs SB vs BB"
          *           "Button vs BB"
          */
-        if (!isset($this->spotsConfigurations[$positions[0] . ' vs ' . $positions[1]])) {
-            dump($positions[0] . ' vs ' . $positions[1]);
-            exit;
+        $configuration = implode(" vs ", $positions);
+
+        if (!isset($this->spotsConfigurations[$configuration])) {
+            $this->spotsConfigurations[$configuration] = [];
         }
+
+        $result = [];
+
+        foreach ($positions as $position => $pseudo) {
+
+            dump($position);
+            dump($pseudo);
+            dump($showdown);
+
+            dump(array_key_exists('J1mmy Conway', $showdown));
+
+            exit;
+
+            if (array_key_exists($pseudo, $showdown)) {
+                $result[$position] = $showdown[$pseudo];
+            }
+        }
+
+        dump($result);
         exit;
+
     }
 }

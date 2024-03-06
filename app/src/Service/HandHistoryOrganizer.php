@@ -26,7 +26,7 @@ class HandHistoryOrganizer
         $actions = [];
 
         // Récupérer les showdowns => pseudo et hand
-        foreach ($hands as $hand) {
+        foreach ($hands as $id => $hand) {
             foreach ($hand["Preflop"] as $playerActions) {
                 foreach ($playerActions as $action) {
                     $actions[] = $action;
@@ -37,33 +37,33 @@ class HandHistoryOrganizer
 
             if (!isset($totalActions['raises'])) {
                 if (!isset($totalActions['calls'])) {
-                    $this->undefinedActionHands[] = $hand;
+                    $this->undefinedActionHands[$id] = $hand;
                 }
 
                 if (isset($totalActions['calls'])) {
-                    $this->limpedHands[] = $hand;
+                    $this->limpedHands[$id] = $hand;
                 }
             }
 
             if (isset($totalActions['raises'])) {
                 if ($totalActions['raises'] === 1) {
-                    $this->singleRaisedHands[] = $hand;
+                    $this->singleRaisedHands[$id] = $hand;
                 }
 
                 if ($totalActions['raises'] === 2) {
-                    $this->threeBettedHAnds[] = $hand;
+                    $this->threeBettedHAnds[$id] = $hand;
                 }
 
                 if ($totalActions['raises'] === 3) {
-                    $this->fourBettedHands[] = $hand;
+                    $this->fourBettedHands[$id] = $hand;
                 }
 
                 if ($totalActions['raises'] === 4) {
-                    $this->fiveBettedHands[] = $hand;
+                    $this->fiveBettedHands[$id] = $hand;
                 }
 
                 if ($totalActions['raises'] === 5) {
-                    $this->sixBettedHands[] = $hand;
+                    $this->sixBettedHands[$id] = $hand;
                 }
             }
 
