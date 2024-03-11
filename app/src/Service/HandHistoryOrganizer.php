@@ -20,6 +20,14 @@ class HandHistoryOrganizer
 
     private array $organizedHands = [];
 
+    private array $orderedSeat = [
+        "UTG", 
+        "CO", 
+        "Button", 
+        "Small Blind", 
+        "Big Blind"
+    ];
+
     public function organizeHAnds(array $hands)
     {
         // Récupérer toutes les actions
@@ -27,48 +35,69 @@ class HandHistoryOrganizer
 
         // Récupérer les showdowns => pseudo et hand
         foreach ($hands as $id => $hand) {
-            foreach ($hand["Preflop"] as $playerActions) {
-                foreach ($playerActions as $action) {
-                    $actions[] = $action;
+
+            try {
+                /**
+                  * $commonKeys = array_intersect(
+                  *   $this->orderedSeat, 
+                  *   array_keys($hand['Seats Position'])
+                  *  );
+                */
+
+                $hand['Seats Position'] = array_replace(
+                    array_flip($this->orderedSeat),
+                    $hand['Seats Position']
+                );
+    
+                $hand['Players Position'] = array_replace(
+                    array_flip($this->orderedSeat),
+                    $hand['Players Position']
+                );
+    
+                foreach ($hand["Preflop"] as $playerActions) {
+                    foreach ($playerActions as $action) {
+                        $actions[] = $action;
+                    }
                 }
+
+                $totalActions = array_count_values($actions);
+
+                if (!isset($totalActions['raises'])) {
+                    if (!isset($totalActions['calls'])) {
+                        $this->undefinedActionHands[$id] = $hand;
+                    }
+
+                    if (isset($totalActions['calls'])) {
+                        $this->limpedHands[$id] = $hand;
+                    }
+                }
+
+                if (isset($totalActions['raises'])) {
+                    if ($totalActions['raises'] === 1) {
+                        $this->singleRaisedHands[$id] = $hand;
+                    }
+    
+                    if ($totalActions['raises'] === 2) {
+                        $this->threeBettedHAnds[$id] = $hand;
+                    }
+    
+                    if ($totalActions['raises'] === 3) {
+                        $this->fourBettedHands[$id] = $hand;
+                    }
+    
+                    if ($totalActions['raises'] === 4) {
+                        $this->fiveBettedHands[$id] = $hand;
+                    }
+    
+                    if ($totalActions['raises'] === 5) {
+                        $this->sixBettedHands[$id] = $hand;
+                    }
+                }
+    
+                $actions = [];
+                $totalActions = [];
+            } catch (\Exception $e) {
             }
-
-            $totalActions = array_count_values($actions);
-
-            if (!isset($totalActions['raises'])) {
-                if (!isset($totalActions['calls'])) {
-                    $this->undefinedActionHands[$id] = $hand;
-                }
-
-                if (isset($totalActions['calls'])) {
-                    $this->limpedHands[$id] = $hand;
-                }
-            }
-
-            if (isset($totalActions['raises'])) {
-                if ($totalActions['raises'] === 1) {
-                    $this->singleRaisedHands[$id] = $hand;
-                }
-
-                if ($totalActions['raises'] === 2) {
-                    $this->threeBettedHAnds[$id] = $hand;
-                }
-
-                if ($totalActions['raises'] === 3) {
-                    $this->fourBettedHands[$id] = $hand;
-                }
-
-                if ($totalActions['raises'] === 4) {
-                    $this->fiveBettedHands[$id] = $hand;
-                }
-
-                if ($totalActions['raises'] === 5) {
-                    $this->sixBettedHands[$id] = $hand;
-                }
-            }
-
-            $actions = [];
-            $totalActions = [];
         }
 
         $this->mergeOrganizedHands();
