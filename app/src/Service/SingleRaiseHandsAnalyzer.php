@@ -11,7 +11,7 @@ class SingleRaiseHandsAnalyzer
         'K',
         'Q',
         'J',
-        '10',
+        'T',
         '9',
         '8',
         '7',
@@ -21,8 +21,6 @@ class SingleRaiseHandsAnalyzer
         '3',
         '2'
     ];
-
-    private array $families = ['c', 'd', 's', 'h'];
 
     public function analyze(array $hands)
     {
@@ -39,13 +37,9 @@ class SingleRaiseHandsAnalyzer
             foreach ($hands as $idHand => $positions) {
                 foreach ($positions as $position => $cards) {
                     $cards = $this->formatCards($cards, $this->cards);
-                    dump($position);
-                    dump($cards);
-                    exit;
+                    $this->spotsConfigurations[$spot][$idHand][$position] = $cards;
                 }
             }
-            dump($hand);
-            exit;
         }
 
         dump($this->spotsConfigurations);
@@ -59,28 +53,27 @@ class SingleRaiseHandsAnalyzer
 
     private function formatCards(string $cards, array $cardsValues)
     {
-        $cards = str_split($cards);
-        dump($cards);
-        usort($cards, function ($a, $b) use ($cardsValues) {
+        $explodedCards = explode(' ', $cards);
+
+        $family1 = substr($explodedCards[0], -1);
+        $family2 = substr($explodedCards[1], -1);
+
+        $suited = $family1 === $family2 ? 's' : 'o';
+
+        $explodedCards[0] = substr($explodedCards[0], 0, 1);
+        $explodedCards[1] = substr($explodedCards[1], 0, 1);
+        
+        if ($explodedCards[0] === $explodedCards[1]) {
+            return $explodedCards[0] . $explodedCards[1];
+        }
+
+        usort($explodedCards, function ($a, $b) use ($cardsValues) {
             $indexA = $this->getIndex($a, $cardsValues);
             $indexB = $this->getIndex($b, $cardsValues);
             return $indexA <=> $indexB;
         });
 
-        dump($cards);
-        exit;
-
-        $cards = explode(' ', $cards);
-
-        $family1 = substr($cards[0], -1);
-        $family2 = substr($cards[1], -1);
-
-        if ($family1 === $family2) {
-            return $cards[0] . $cards[1] . "s";
-        } else {
-            return $cards[0] . $cards[1] . "o";
-        }
-        dd($cards);
+        return $explodedCards[0] . $explodedCards[1] . $suited;
     }
 
     private function getDataFromSpot(array $hand, string $idHand)
