@@ -22,6 +22,8 @@ class SingleRaiseHandsAnalyzer
         '2'
     ];
 
+    private array $stats = [];
+
     public function analyze(array $hands)
     {
         foreach ($hands as $id => $hand) {
@@ -42,7 +44,28 @@ class SingleRaiseHandsAnalyzer
             }
         }
 
-        dump($this->spotsConfigurations);
+        foreach ($this->spotsConfigurations as $spot => $hands) {
+
+            if (!in_array($spot, $this->stats)) {
+                $this->stats[$spot] = [];
+            }
+
+            foreach ($hands as $hand) {
+                foreach ($hand as $position => $cards) {
+                    if (!array_key_exists($position, $this->stats[$spot])) {
+                        $this->stats[$spot][$position] = [];
+                    }
+
+                    if (!array_key_exists($cards, $this->stats[$spot][$position])) {
+                        $this->stats[$spot][$position][$cards] = 1;
+                    } else {
+                        $this->stats[$spot][$position][$cards] += 1;
+                    }
+                }
+            }
+        }
+
+        dump($this->stats);
         exit;
     }
 
