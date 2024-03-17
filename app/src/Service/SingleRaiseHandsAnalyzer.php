@@ -65,11 +65,21 @@ class SingleRaiseHandsAnalyzer
             }
         }
 
+        foreach ($this->stats as $spot => $positions) {
+            foreach ($positions as $position => $hands) {
+                $total = array_sum($hands);
+                foreach ($hands as $hand => $value) {
+                    $this->stats[$spot][$position][$hand] = round(($value / $total) * 100, 4);
+                }
+                arsort($this->stats[$spot][$position]);
+            }
+        }
+
         dump($this->stats);
         exit;
     }
 
-    function getIndex($value, $array)
+    private function getIndex($value, $array)
     {
         return array_search($value, $array);
     }
