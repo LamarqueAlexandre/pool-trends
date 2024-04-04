@@ -22,6 +22,80 @@ class SingleRaiseHandsAnalyzer
         '2'
     ];
 
+    private array $groupsOfHands = [
+        'suited broadways' => [
+            'AKs',
+            'AQs',
+            'AJs',
+            'ATs',
+            'KQs',
+            'KJs',
+            'KTs',
+            'QJs',
+            'QTs',
+        ],
+        'offsuit broadways' => [
+            'AKo',
+            'AQo',
+            'AJo',
+            'ATo',
+            'KQo',
+            'KJo',
+            'KTo',
+            'QJo',
+            'QTo',
+        ],
+        'premium' => [
+            'AA',
+            'KK',
+            'QQ',
+            'JJ',
+            'TT',
+        ],
+        'middle pocket pairs' => [
+            '99',
+            '88',
+            '77',
+            '66',
+        ],
+        'low pocket pairs' => [
+            '55',
+            '44',
+            '33',
+            '22',
+        ],
+        'suited connectors' => [
+            '32s',
+            '43s',
+            '54s',
+            '65s',
+            '76s',
+            '87s',
+            '98s',
+            'T9s'
+        ],
+        'suited aces' => [
+            'A2s',
+            'A3s',
+            'A4s',
+            'A5s',
+            'A6s',
+            'A7s',
+            'A8s',
+            'A9s'
+        ],
+        'suited kings' => [
+            'K2s',
+            'K3s',
+            'K4s',
+            'K5s',
+            'K6s',
+            'K7s',
+            'K8s',
+            'K9s'
+        ],
+    ]; 
+
     private array $stats = [];
 
     public function analyze(array $hands)
