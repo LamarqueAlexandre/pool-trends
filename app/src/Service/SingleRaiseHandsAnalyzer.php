@@ -130,6 +130,10 @@ class SingleRaiseHandsAnalyzer
                         $this->stats[$spot][$position] = [];
                     }
 
+                    if (empty($this->stats[$spot][$position])) {
+                        $this->stats[$spot][$position] = array_fill_keys(array_keys($this->groupsOfHands), []);
+                    }
+
                     if (!array_key_exists($cards, $this->stats[$spot][$position])) {
                         $this->stats[$spot][$position][$cards] = 1;
                     } else {
