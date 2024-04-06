@@ -33,6 +33,7 @@ class SingleRaiseHandsAnalyzer
             'KTs',
             'QJs',
             'QTs',
+            'JTs',
         ],
         'offsuit broadways' => [
             'AKo',
@@ -44,6 +45,7 @@ class SingleRaiseHandsAnalyzer
             'KTo',
             'QJo',
             'QTo',
+            'JTo',
         ],
         'premium' => [
             'AA',
@@ -72,7 +74,7 @@ class SingleRaiseHandsAnalyzer
             '76s',
             '87s',
             '98s',
-            'T9s'
+            'T9s',
         ],
         'suited aces' => [
             'A2s',
@@ -82,7 +84,7 @@ class SingleRaiseHandsAnalyzer
             'A6s',
             'A7s',
             'A8s',
-            'A9s'
+            'A9s',
         ],
         'suited kings' => [
             'K2s',
@@ -92,7 +94,7 @@ class SingleRaiseHandsAnalyzer
             'K6s',
             'K7s',
             'K8s',
-            'K9s'
+            'K9s',
         ],
         'low offsuit aces' => [
             'A2o',
@@ -106,6 +108,19 @@ class SingleRaiseHandsAnalyzer
             'A8o',
             'A9o',
         ],
+        'low offsuit kings' => [
+            'K2o',
+            'K3o',
+            'K4o',
+            'K5o',
+        ],
+        'middle offsuit kings' => [
+            'K6o',
+            'K7o',
+            'K8o',
+            'K9o',
+        ],
+        'others types' => []
     ]; 
 
     private array $stats = [];
@@ -148,24 +163,16 @@ class SingleRaiseHandsAnalyzer
 
                     $type = $this->getHandGroup($this->groupsOfHands, $cards);
 
-                    if (!is_null($type)) {
-                        if (!array_key_exists($cards, $this->stats[$spot][$position][$type])) {
-                            $this->stats[$spot][$position][$type][$cards] = 1;
-                        } else {
-                            $this->stats[$spot][$position][$type][$cards] += 1;
-                        }
+                    if (!array_key_exists($cards, $this->stats[$spot][$position][$type])) {
+                        $this->stats[$spot][$position][$type][$cards] = 1;
                     } else {
-                        if (!array_key_exists($cards, $this->stats[$spot][$position])) {
-                            $this->stats[$spot][$position][$cards] = 1;
-                        } else {
-                            $this->stats[$spot][$position][$cards] += 1;
-                        }
+                        $this->stats[$spot][$position][$type][$cards] += 1;
                     }
-
-                    dd($this->stats);
                 }
             }
         }
+
+        dd($this->stats);
 
         foreach ($this->stats as $spot => $positions) {
             foreach ($positions as $position => $hands) {
@@ -252,6 +259,6 @@ class SingleRaiseHandsAnalyzer
             }
         }
 
-        return null;
+        return 'others types';
     }
 }
