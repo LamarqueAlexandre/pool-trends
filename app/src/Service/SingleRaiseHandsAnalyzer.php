@@ -94,6 +94,18 @@ class SingleRaiseHandsAnalyzer
             'K8s',
             'K9s'
         ],
+        'low offsuit aces' => [
+            'A2o',
+            'A3o',
+            'A4o',
+            'A5o',
+        ],
+        'middle offsuit aces' => [
+            'A6o',
+            'A7o',
+            'A8o',
+            'A9o',
+        ],
     ]; 
 
     private array $stats = [];
