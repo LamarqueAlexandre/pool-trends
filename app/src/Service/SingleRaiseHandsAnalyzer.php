@@ -146,11 +146,23 @@ class SingleRaiseHandsAnalyzer
                         $this->stats[$spot][$position] = array_fill_keys(array_keys($this->groupsOfHands), []);
                     }
 
-                    if (!array_key_exists($cards, $this->stats[$spot][$position])) {
-                        $this->stats[$spot][$position][$cards] = 1;
+                    $type = $this->getHandGroup($this->groupsOfHands, $cards);
+
+                    if (!is_null($type)) {
+                        if (!array_key_exists($cards, $this->stats[$spot][$position][$type])) {
+                            $this->stats[$spot][$position][$type][$cards] = 1;
+                        } else {
+                            $this->stats[$spot][$position][$type][$cards] += 1;
+                        }
                     } else {
-                        $this->stats[$spot][$position][$cards] += 1;
+                        if (!array_key_exists($cards, $this->stats[$spot][$position])) {
+                            $this->stats[$spot][$position][$cards] = 1;
+                        } else {
+                            $this->stats[$spot][$position][$cards] += 1;
+                        }
                     }
+
+                    dd($this->stats);
                 }
             }
         }
@@ -230,5 +242,16 @@ class SingleRaiseHandsAnalyzer
         }
 
         $this->spotsConfigurations[$configuration][$idHand] = $playersPositionsShowdown;
+    }
+
+    private function getHandGroup(array $mapping, string $hand)
+    {
+        foreach ($mapping as $type => $values) {
+            if (in_array($hand, $values)) {
+                return $type;
+            }
+        }
+
+        return null;
     }
 }
